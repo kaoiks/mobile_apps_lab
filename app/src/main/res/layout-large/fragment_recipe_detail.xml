@@ -13,4 +13,8 @@
         android:layout_width="wrap_content"
 
         android:id="@+id/textDescription" />
+    <FrameLayout
+        android:id="@+id/stoper_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
