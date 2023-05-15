@@ -2,6 +2,7 @@ package com.example.cookbook
 
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
@@ -12,8 +13,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 
@@ -76,7 +79,6 @@ class StoperFragment : Fragment(), View.OnClickListener {
     }
 
     private fun onClickStart() {
-        seconds = minutesField.text.toString().toInt() * 60 + secondsField.text.toString().toInt()
         running = true
     }
 
@@ -86,7 +88,7 @@ class StoperFragment : Fragment(), View.OnClickListener {
 
     private fun onClickReset() {
         running = false
-        seconds = 15
+        seconds = minutesField.text.toString().toInt() * 60 + secondsField.text.toString().toInt()
         minutesField.visibility = View.VISIBLE
         secondsField.visibility = View.VISIBLE
         val timeView = view?.findViewById<View>(R.id.time_view) as TextView
@@ -99,7 +101,7 @@ class StoperFragment : Fragment(), View.OnClickListener {
         handler.post(object : Runnable {
             override fun run() {
 
-                val minutes = seconds % 3600 / 60
+                val minutes = seconds / 60
                 val secs = seconds % 60
                 val time = String.format("%02d:%02d", minutes, secs)
                 timeView.text = time
@@ -117,7 +119,6 @@ class StoperFragment : Fragment(), View.OnClickListener {
                     Toast.makeText(requireContext(), "COUNTDOWN HAS FINISHED", Toast.LENGTH_LONG).show()
                     timeView.visibility = View.INVISIBLE
                     onClickReset()
-
                 }
             }
         })
@@ -150,13 +151,12 @@ class StoperFragment : Fragment(), View.OnClickListener {
             if (minutesValue > minutesMaxValue) {
                 s.replace(0, s.length, minutesMaxValue.toString())
             }
+            seconds = minutesField.text.toString().toInt() * 60 + secondsField.text.toString().toInt()
         }
     }
 
     private val secondsTextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            Log.d("DEBUGING", s.toString())
-        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         override fun afterTextChanged(s: Editable?) {
             if (s.isNullOrBlank()) {
@@ -170,6 +170,7 @@ class StoperFragment : Fragment(), View.OnClickListener {
             if (secondsValue > secondsMaxValue) {
                 s.replace(0, s.length, secondsMaxValue.toString())
             }
+            seconds = minutesField.text.toString().toInt() * 60 + secondsField.text.toString().toInt()
         }
     }
 

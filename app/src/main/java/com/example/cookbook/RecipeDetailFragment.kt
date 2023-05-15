@@ -45,7 +45,7 @@ class RecipeDetailFragment : Fragment() {
         shareButton = view.findViewById<FloatingActionButton>(R.id.fab_share)
         shareButton.setOnClickListener {
             Log.d("SHARING", "SHARE BUTTON PRESSED")
-            val recipe: Recipe = Recipe.recipes[recipeId.toInt()]
+            val recipe: Recipe = getRecipes()[recipeId.toInt()]
             shareRecipe(recipe.getRecipe())
         }
     }
@@ -63,7 +63,7 @@ class RecipeDetailFragment : Fragment() {
         if (view != null) {
             val title = view.findViewById<View>(R.id.textTitle) as TextView
 
-            val recipe: Recipe = Recipe.recipes[recipeId.toInt()]
+            val recipe: Recipe = getRecipes()[recipeId.toInt()]
             title.text = recipe.getName()
             val description = view.findViewById<View>(R.id.textDescription) as TextView
             description.text = recipe.getRecipe()

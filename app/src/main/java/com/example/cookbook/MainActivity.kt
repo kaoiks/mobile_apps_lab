@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity(), RecipeListFragment.OnListItemClickList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.d("APP_LOGS", "Initialized view")
         var toolbar = findViewById<View>(R.id.toolbar)
         if (toolbar == null) {
             setSupportActionBar(toolbar as Toolbar?)
@@ -29,18 +30,6 @@ class MainActivity : AppCompatActivity(), RecipeListFragment.OnListItemClickList
 
 
     }
-
-//    fun onShowDetail(view: View?) {
-//        val intent = Intent(this, DetailActivity::class.java)
-//        startActivity(intent)
-//    }
-//
-//
-//    fun itemClicked(id: Long) {
-//        val intent = Intent(this, DetailActivity::class.java)
-//        intent.putExtra(DetailActivity.EXTRA_RECIPE_ID,  id.toInt());
-//        startActivity(intent)
-//    }
 
     override fun onListItemClick(id: Long) {
         val fragmentContainer = findViewById<View>(R.id.fragment_container)
