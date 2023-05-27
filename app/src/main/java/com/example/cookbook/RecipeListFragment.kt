@@ -8,26 +8,28 @@ import android.os.StrictMode.ThreadPolicy
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.ListFragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
-class RecipeListFragment : Fragment() {
+class RecipeListFragment() : Fragment() {
     private val mainScope = MainScope()
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RecipeAdapter
     private lateinit var recipes: ArrayList<Recipe>
-    var listener: OnListItemClickListener? = null
+    var listener: OnItemClickListener? = null
+
+    interface OnItemClickListener {
+        fun onItemClick(position: Int)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnListItemClickListener) {
+        if (context is OnItemClickListener) {
             listener = context
         } else {
             throw RuntimeException("$context must implement OnListItemClickListener")
@@ -44,14 +46,12 @@ class RecipeListFragment : Fragment() {
         }
         adapter = RecipeAdapter(requireContext(), ArrayList())
         lifecycleScope.launch {
-            recipes = getRecipes() as ArrayList
 
         }
 
 
 
     }
-
 
 
     override fun onDetach() {
@@ -64,9 +64,12 @@ class RecipeListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         val view = inflater.inflate(R.layout.fragment_recipe_list, container, false)
         recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        val layoutManager = GridLayoutManager(requireContext(), 2 )
+//        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
         return view
     }
@@ -77,9 +80,12 @@ class RecipeListFragment : Fragment() {
             recipes = getRecipes() as ArrayList
             adapter.updateData(recipes)
         }
+        adapter.setOnItemClickListener(object : OnItemClickListener {
+            override fun onItemClick(position: Int) {
+                listener?.onItemClick(position)
+            }
+        })
+
     }
 
-    interface OnListItemClickListener {
-        fun onListItemClick(id: Long)
-    }
 }

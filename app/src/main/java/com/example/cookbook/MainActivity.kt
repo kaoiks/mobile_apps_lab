@@ -10,7 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentTransaction
 
 
-class MainActivity : AppCompatActivity(), RecipeListFragment.OnListItemClickListener {
+class MainActivity : AppCompatActivity(), RecipeListFragment.OnItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -31,11 +31,13 @@ class MainActivity : AppCompatActivity(), RecipeListFragment.OnListItemClickList
 
     }
 
-    override fun onListItemClick(id: Long) {
+    override fun onItemClick(position: Int) {
+        Log.d("DEV_DEBUG","ITEM CLICKED")
         val fragmentContainer = findViewById<View>(R.id.fragment_container)
         if (fragmentContainer != null) {
             val details = RecipeDetailFragment()
-            details.setRecipe(id)
+            details.setRecipe(position)
+            intent.putExtra(DetailActivity.EXTRA_RECIPE_ID, position)
             val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
             ft.replace(R.id.fragment_container, details)
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -45,12 +47,9 @@ class MainActivity : AppCompatActivity(), RecipeListFragment.OnListItemClickList
         } else {
             Log.d("APP_LOGS", "PHONE DETECTED")
             val intent = Intent(this, DetailActivity::class.java)
-            intent.putExtra(DetailActivity.EXTRA_RECIPE_ID, id)
+            intent.putExtra(DetailActivity.EXTRA_RECIPE_ID, position)
             startActivity(intent)
         }
     }
 
-    interface OnListItemClickListener {
-        fun onListItemClick(id: Long)
-    }
 }

@@ -10,11 +10,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.lang.Exception
 import java.net.URL
-
+import com.example.cookbook.RecipeListFragment.OnItemClickListener
 
 class RecipeAdapter(private val context: Context, private val recipes: ArrayList<Recipe>) : RecyclerView.Adapter<RecipeAdapter.ViewHolder>() {
 
         val recipeArrayList: ArrayList<Recipe>
+        private var itemClickListener: OnItemClickListener? = null
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             // to inflate the layout for each item of recycler view.
             val view: View = LayoutInflater.from(parent.context).inflate(R.layout.card_captioned_image, parent, false)
@@ -25,6 +27,8 @@ class RecipeAdapter(private val context: Context, private val recipes: ArrayList
             val recipe: Recipe = recipeArrayList[position]
 
             holder.recipeName.text = recipe.getName()
+            holder.recipeId.text = recipe.id.toString()
+
             try {
                 val url = URL(recipe.photo_url)
                 val bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream())
@@ -33,8 +37,16 @@ class RecipeAdapter(private val context: Context, private val recipes: ArrayList
             catch(_: Exception){
                 holder.recipeImage.setImageResource(R.drawable.ic_image_not_found)
             }
+
+            holder.itemView.setOnClickListener {
+                itemClickListener?.onItemClick(recipe.id)
+            }
+
         }
 
+        fun setOnItemClickListener(listener: OnItemClickListener) {
+            itemClickListener = listener
+        }
         override fun getItemCount(): Int {
             return recipeArrayList.size
         }
@@ -42,9 +54,12 @@ class RecipeAdapter(private val context: Context, private val recipes: ArrayList
         class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val recipeImage: ImageView
             val recipeName: TextView
+            val recipeId: TextView
             init {
+
                 recipeImage = itemView.findViewById(R.id.recipe_image_view)
                 recipeName = itemView.findViewById(R.id.recipe_name_text_view)
+                recipeId = itemView.findViewById(R.id.recipe_id)
             }
         }
         fun updateData(newRecipes: ArrayList<Recipe>) {
@@ -52,6 +67,10 @@ class RecipeAdapter(private val context: Context, private val recipes: ArrayList
             recipes.addAll(newRecipes)
             notifyDataSetChanged()
         }
+
+
+
+
         init {
             this.recipeArrayList = recipes
             recipeArrayList.addAll(recipes)

@@ -110,16 +110,19 @@ class StoperFragment : Fragment(), View.OnClickListener {
                     minutesField.visibility = View.INVISIBLE
                     secondsField.visibility = View.INVISIBLE
                     seconds--
+
+                    if (seconds == 0 && running){
+                        Thread.sleep(1000)
+                        val notification: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+                        val r = RingtoneManager.getRingtone(requireContext(), notification)
+                        r.play()
+                        Toast.makeText(requireContext(), "COUNTDOWN HAS FINISHED", Toast.LENGTH_LONG).show()
+                        timeView.visibility = View.INVISIBLE
+                        onClickReset()
+                    }
                 }
                 handler.postDelayed(this, 1000)
-                if (seconds == 0){
-                    val notification: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-                    val r = RingtoneManager.getRingtone(requireContext(), notification)
-                    r.play()
-                    Toast.makeText(requireContext(), "COUNTDOWN HAS FINISHED", Toast.LENGTH_LONG).show()
-                    timeView.visibility = View.INVISIBLE
-                    onClickReset()
-                }
+
             }
         })
     }
