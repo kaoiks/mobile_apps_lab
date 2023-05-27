@@ -1,42 +1,62 @@
 package com.example.cookbook
 
 import android.content.Context
-import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.ListFragment
-import android.R as RR
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 
-class RecipeListFragment : ListFragment() {
+class RecipeListFragment() : Fragment() {
+    private val mainScope = MainScope()
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: RecipeAdapter
+    private lateinit var recipes: ArrayList<Recipe>
+    var listener: OnItemClickListener? = null
 
-    var listener: OnListItemClickListener? = null
+    interface OnItemClickListener {
+        fun onItemClick(position: Int)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnListItemClickListener) {
+        if (context is OnItemClickListener) {
             listener = context
         } else {
             throw RuntimeException("$context must implement OnListItemClickListener")
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val SDK_INT = Build.VERSION.SDK_INT
+        if (SDK_INT > 8) {
+            val policy = ThreadPolicy.Builder()
+                .permitAll().build()
+            StrictMode.setThreadPolicy(policy)
+        }
+        adapter = RecipeAdapter(requireContext(), ArrayList())
+        lifecycleScope.launch {
+
+        }
+
+
+
+    }
+
+
     override fun onDetach() {
         super.onDetach()
         listener = null
-    }
-
-    override fun onListItemClick(l: ListView, v: View, position: Int, id: Long) {
-        super.onListItemClick(l, v, position, id)
-        listener?.onListItemClick(id)
     }
 
     override fun onCreateView(
@@ -44,19 +64,28 @@ class RecipeListFragment : ListFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val names = arrayOfNulls<String>(Recipe.recipes.size)
-        for (i in names.indices) {
-            names[i] = Recipe.recipes[i].getName()
+
+        val view = inflater.inflate(R.layout.fragment_recipe_list, container, false)
+        recyclerView = view.findViewById(R.id.recycler_view)
+        val layoutManager = GridLayoutManager(requireContext(), 2 )
+//        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = adapter
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        lifecycleScope.launch {
+            recipes = getRecipes() as ArrayList
+            adapter.updateData(recipes)
         }
-        val adapter: ArrayAdapter<String> = ArrayAdapter(
-            inflater.context, RR.layout.simple_list_item_1, names
-        )
-        listAdapter = adapter
-        return super.onCreateView(inflater, container, savedInstanceState)
+        adapter.setOnItemClickListener(object : OnItemClickListener {
+            override fun onItemClick(position: Int) {
+                listener?.onItemClick(position)
+            }
+        })
+
     }
 
-
-    interface OnListItemClickListener {
-        fun onListItemClick(id: Long)
-    }
 }

@@ -2,16 +2,18 @@ package com.example.cookbook
 
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.net.URL
 
 
 class RecipeDetailFragment : Fragment() {
@@ -32,6 +34,7 @@ class RecipeDetailFragment : Fragment() {
             ft.commit()
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,12 +48,12 @@ class RecipeDetailFragment : Fragment() {
         shareButton = view.findViewById<FloatingActionButton>(R.id.fab_share)
         shareButton.setOnClickListener {
             Log.d("SHARING", "SHARE BUTTON PRESSED")
-            val recipe: Recipe = Recipe.recipes[recipeId.toInt()]
+            val recipe: Recipe = getRecipe(recipeId.toInt())
             shareRecipe(recipe.getRecipe())
         }
     }
-    fun setRecipe(id: Long) {
-        this.recipeId = id
+    fun setRecipe(id: Int) {
+        this.recipeId = id.toLong()
     }
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -62,11 +65,17 @@ class RecipeDetailFragment : Fragment() {
         val view = view
         if (view != null) {
             val title = view.findViewById<View>(R.id.textTitle) as TextView
-
-            val recipe: Recipe = Recipe.recipes[recipeId.toInt()]
+            Log.d("DEV_DEBUG", recipeId.toString())
+            val recipe: Recipe = getRecipe(recipeId.toInt())
             title.text = recipe.getName()
             val description = view.findViewById<View>(R.id.textDescription) as TextView
             description.text = recipe.getRecipe()
+            val imageRecipe = view.findViewById<ImageView>(R.id.imageRecipe)
+            val url = URL(recipe.photo_url)
+            val bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+            imageRecipe.setImageBitmap(bmp)
+
+
         }
     }
 

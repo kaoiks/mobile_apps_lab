@@ -11,8 +11,9 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
         val frag: RecipeDetailFragment = supportFragmentManager.findFragmentById(R.id.detail_frag) as RecipeDetailFragment
-        val recipeId = intent.extras!![EXTRA_RECIPE_ID] as Long
-        frag.setRecipe(recipeId)
+
+        val recipeId = (intent.extras!![EXTRA_RECIPE_ID] as Int).toLong()
+        frag.setRecipe(recipeId.toInt())
 
     }
 
