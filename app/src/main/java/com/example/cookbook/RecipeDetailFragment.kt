@@ -19,6 +19,8 @@ import java.net.URL
 class RecipeDetailFragment : Fragment() {
     private var recipeId: Long = 0
     private lateinit var shareButton: FloatingActionButton
+    private lateinit var recipeIngretiens: String
+    private lateinit var recipe: Recipe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
@@ -45,11 +47,11 @@ class RecipeDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         shareButton = view.findViewById<FloatingActionButton>(R.id.fab_share)
         shareButton.setOnClickListener {
             Log.d("SHARING", "SHARE BUTTON PRESSED")
-            val recipe: Recipe = getRecipe(recipeId.toInt())
-            shareRecipe(recipe.getRecipe())
+            shareRecipe(recipe.getRecipeIngredients())
         }
     }
     fun setRecipe(id: Int) {
@@ -64,16 +66,24 @@ class RecipeDetailFragment : Fragment() {
         super.onStart()
         val view = view
         if (view != null) {
+            recipe = getRecipe(recipeId.toInt())
             val title = view.findViewById<View>(R.id.textTitle) as TextView
             Log.d("DEV_DEBUG", recipeId.toString())
-            val recipe: Recipe = getRecipe(recipeId.toInt())
+//            val recipe: Recipe = getRecipe(recipeId.toInt())
             title.text = recipe.getName()
+
+            val ingredients = view.findViewById<View>(R.id.textIngreditens) as TextView
+            ingredients.text = recipe.getRecipeIngredients()
+
             val description = view.findViewById<View>(R.id.textDescription) as TextView
-            description.text = recipe.getRecipe()
-            val imageRecipe = view.findViewById<ImageView>(R.id.imageRecipe)
+            description.text = recipe.getRecipeSteps()
+//            val imageRecipe = view.findViewById<ImageView>(R.id.imageRecipe)
             val url = URL(recipe.photo_url)
             val bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream())
-            imageRecipe.setImageBitmap(bmp)
+//            imageRecipe.setImageBitmap(bmp)
+
+            val callback = activity as? DetailActivityCallback
+            callback?.updateNavigationBarImage(bmp)
 
 
         }

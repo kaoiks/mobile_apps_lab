@@ -11,6 +11,8 @@
     <string name="stop">Stop</string>
     <string name="reset">Reset</string>
     <string name="title_top">Fragment główny</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="recipe_steps">Recipe Steps</string>
 
 
     <string-array name="kategoria1">

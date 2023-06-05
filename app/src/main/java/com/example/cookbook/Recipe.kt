@@ -28,12 +28,25 @@ class Recipe(
     val recipe_items: List<RecipeItem>,
     val recipe_steps: List<RecipeStep>
 ){
-    fun getRecipe(): String {
+    fun getRecipeSteps(): String {
         val recipeStepsString = StringBuilder()
 
         for (step in recipe_steps) {
-            recipeStepsString.append("${step.text}\n")
+
+            recipeStepsString.append("${(step.step_number + 1)}. ${step.text}\n\n")
         }
+
+        return recipeStepsString.toString()
+    }
+
+    fun getRecipeIngredients(): String{
+        val recipeStepsString = StringBuilder()
+
+        for (item in recipe_items) {
+
+            recipeStepsString.append("${(item.title )} x ${item.quantity}\n")
+        }
+
         return recipeStepsString.toString().trim()
     }
 

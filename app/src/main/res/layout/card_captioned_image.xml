@@ -9,13 +9,15 @@
     app:cardElevation="8dp"
     app:cardMaxElevation="10dp"
     app:cardPreventCornerOverlap="true"
-    app:cardUseCompatPadding="true">
+    app:cardUseCompatPadding="true"
+    >
 
 
     <RelativeLayout
         android:layout_width="175dp"
         android:layout_height="175dp"
-        android:padding="2dp">
+        android:padding="2dp"
+        android:layout_gravity="center">
 
         <ImageView
             android:id="@+id/recipe_image_view"
@@ -28,7 +30,7 @@
             android:contentDescription="@string/app_name"
             android:scaleType="centerCrop" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/recipe_name_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,7 +40,12 @@
             android:layout_marginEnd="3dp"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeMaxTextSize="18sp"
+            app:autoSizeStepGranularity="2sp" />
+
 
         <TextView
             android:id="@+id/recipe_id"
