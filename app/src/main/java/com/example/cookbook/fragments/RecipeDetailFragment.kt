@@ -1,4 +1,4 @@
-package com.example.cookbook
+package com.example.cookbook.fragments
 
 
 import android.content.Intent
@@ -8,10 +8,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.example.cookbook.DetailActivityCallback
+import com.example.cookbook.R
+import com.example.cookbook.Recipe
+import com.example.cookbook.getRecipe
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.net.URL
 

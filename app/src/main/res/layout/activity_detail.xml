@@ -32,7 +32,7 @@
 
     <fragment
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:name="com.example.cookbook.RecipeDetailFragment"
+        android:name="com.example.cookbook.fragments.RecipeDetailFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"

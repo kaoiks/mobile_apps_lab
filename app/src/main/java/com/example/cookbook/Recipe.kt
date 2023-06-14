@@ -76,12 +76,12 @@ data class RecipeStep(
 )
 
 
-fun getRecipes(): List<Recipe> {
+fun getMeals(): List<Recipe> {
     Log.d("HTTP", "FETCHING RECIPES")
     val client = OkHttpClient()
 
     val request = Request.Builder()
-        .url("http://10.0.2.2:8000/recipes")
+        .url("http://192.168.0.117:8000/recipes")
         .build()
 
     client.newCall(request).execute().use { response ->
@@ -89,22 +89,34 @@ fun getRecipes(): List<Recipe> {
 
         val gson = Gson()
         val recipeList = gson.fromJson(response.body?.string(), Array<Recipe>::class.java).toList()
-
-//        recipeList.forEach { recipe ->
-//            recipe.recipe_items.forEach { item ->
-//                println("Ingredient: ${item.title} - Quantity: ${item.quantity}")
-//            }
-//            recipe.recipe_steps.forEach { step ->
-//                println("Step ${step.step_number}: ${step.text}")
-//            }
-//        }
-        return recipeList
+        val filteredRecipes = recipeList.filter { it.type == "meat" }
+        return filteredRecipes
     }
 }
 
-fun getRecipe(id: Int): Recipe {
+
+fun getDesserts(): List<Recipe> {
     Log.d("HTTP", "FETCHING RECIPES")
-    val url = URL("http://10.0.2.2:8000/recipes/$id")
+    val client = OkHttpClient()
+
+    val request = Request.Builder()
+        .url("http://192.168.0.117:8000/recipes")
+        .build()
+
+    client.newCall(request).execute().use { response ->
+        if (!response.isSuccessful) throw IOException("Unexpected code $response")
+
+        val gson = Gson()
+        val recipeList = gson.fromJson(response.body?.string(), Array<Recipe>::class.java).toList()
+        val filteredRecipes = recipeList.filter { it.type == "dessert" }
+        return filteredRecipes
+    }
+}
+
+
+fun getRecipe(id: Int): Recipe {
+    Log.d("HTTP", "FETCHING RECIPE")
+    val url = URL("http://192.168.0.117:8000/recipes/$id")
     with(url.openConnection() as HttpURLConnection) {
         requestMethod = "GET"
 

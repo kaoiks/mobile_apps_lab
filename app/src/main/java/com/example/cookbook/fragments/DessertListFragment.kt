@@ -1,4 +1,4 @@
-package com.example.cookbook
+package com.example.cookbook.fragments
 
 import android.content.Context
 import android.os.Build
@@ -12,14 +12,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cookbook.R
+import com.example.cookbook.Recipe
+import com.example.cookbook.adapters.DessertAdapter
+import com.example.cookbook.getDesserts
+import com.example.cookbook.getMeals
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 
-class RecipeListFragment() : Fragment() {
+class DessertListFragment() : Fragment() {
     private val mainScope = MainScope()
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: RecipeAdapter
+    private lateinit var adapter: DessertAdapter
     private lateinit var recipes: ArrayList<Recipe>
     var listener: OnItemClickListener? = null
 
@@ -44,11 +49,10 @@ class RecipeListFragment() : Fragment() {
                 .permitAll().build()
             StrictMode.setThreadPolicy(policy)
         }
-        adapter = RecipeAdapter(requireContext(), ArrayList())
+        adapter = DessertAdapter(requireContext(), ArrayList())
         lifecycleScope.launch {
 
         }
-
 
 
     }
@@ -67,7 +71,7 @@ class RecipeListFragment() : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_recipe_list, container, false)
         recyclerView = view.findViewById(R.id.recycler_view)
-        val layoutManager = GridLayoutManager(requireContext(), 2 )
+        val layoutManager = GridLayoutManager(requireContext(), 2)
 //        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
@@ -77,7 +81,7 @@ class RecipeListFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lifecycleScope.launch {
-            recipes = getRecipes() as ArrayList
+            recipes = getDesserts() as ArrayList
             adapter.updateData(recipes)
         }
         adapter.setOnItemClickListener(object : OnItemClickListener {
